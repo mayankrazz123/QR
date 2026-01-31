@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download QR Code</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 600px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            margin-bottom: 30px;
+        }
+        
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        #qrcode {
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            display: inline-block;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .size-controls {
+            margin: 20px 0;
+        }
+        
+        .size-controls label {
+            text-align: center;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .info {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .info p {
+            margin: 0;
+            color: #555;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 Download QR Code</h1>
+        <p>Generate and download your rating page QR code</p>
+        
+        <div class="input-group">
+            <label for="url">Your Rating Page URL:</label>
+            <input 
+                type="text" 
+                id="url" 
+                value="https://qr-one-cyan.vercel.app/rate" 
+                placeholder="Enter your deployed URL"
+            >
+        </div>
+        
+        <div class="size-controls">
+            <label>QR Code Size: <span id="sizeValue">512</span>px</label>
+            <input 
+                type="range" 
+                id="size" 
+                min="256" 
+                max="1024" 
+                value="512" 
+                step="64"
+            >
+        </div>
+        
+        <div id="qrcode"></div>
+        
+        <div class="button-group">
+            <button onclick="downloadQR()">📥 Download PNG</button>
+            <button onclick="generateQR()">🔄 Regenerate</button>
+        </div>
+        
+        <div class="info">
+            <p>💡 <strong>Tip:</strong> After downloading, print this QR code and display it near your product. Customers can scan it to leave ratings!</p>
+        </div>
+    </div>
+    
+    <script>
+        let qrCodeInstance = null;
+        
+        function generateQR() {
+            const url = document.getElementById('url').value;
+            const size = parseInt(document.getElementById('size').value);
+            const qrcodeDiv = document.getElementById('qrcode');
+            
+            // Clear previous QR code
+            qrcodeDiv.innerHTML = '';
+            
+            // Generate new QR code
+            qrCodeInstance = new QRCode(qrcodeDiv, {
+                text: url,
+                width: size,
+                height: size,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+        
+        function downloadQR() {
+            const canvas = document.querySelector('#qrcode canvas');
+            if (!canvas) {
+                alert('Please generate a QR code first!');
+                return;
+            }
+            
+            // Convert canvas to blob and download
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'rating-qr-code.png';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+        }
+        
+        // Update size value display
+        document.getElementById('size').addEventListener('input', function(e) {
+            document.getElementById('sizeValue').textContent = e.target.value;
+        });
+        
+        // Regenerate on URL change
+        document.getElementById('url').addEventListener('change', generateQR);
+        
+        // Generate QR code on page load
+        window.onload = generateQR;
+    </script>
+</body>
+</html>
+
