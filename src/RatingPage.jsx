@@ -14,9 +14,14 @@ function RatingPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
+
     if (rating === 0) {
       setSubmitStatus('Please select a rating!')
+      return
+    }
+
+    if (!name.trim()) {
+      setSubmitStatus('Please enter your name!')
       return
     }
 
@@ -99,7 +104,7 @@ function RatingPage() {
 
           {/* Name Input */}
           <div className="form-group">
-            <label className="label" htmlFor="name">Name (Optional)</label>
+            <label className="label" htmlFor="name">Name</label>
             <input
               type="text"
               id="name"
@@ -107,6 +112,7 @@ function RatingPage() {
               placeholder="Enter your name"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              required
             />
           </div>
 
