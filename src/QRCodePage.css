@@ -152,11 +152,37 @@
   text-align: center;
   padding-top: 20px;
   border-top: 2px solid #e0e0e0;
+  margin-bottom: 20px;
 }
 
 .footer-note p {
   color: #666;
   font-size: 0.95rem;
+}
+
+.download-section {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.download-qr-link {
+  display: inline-block;
+  background: white;
+  color: #667eea;
+  padding: 12px 30px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  border: 2px solid #667eea;
+  transition: all 0.3s ease;
+}
+
+.download-qr-link:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
 }
 
 /* Mobile Responsive */

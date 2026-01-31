@@ -68,6 +68,12 @@ function QRCodePage() {
         <div className="footer-note">
           <p>🔒 Your feedback is valuable and will be sent directly to us</p>
         </div>
+
+        <div className="download-section">
+          <a href="/download" className="download-qr-link">
+            📥 Download QR Code Image
+          </a>
+        </div>
       </div>
     </div>
   )
